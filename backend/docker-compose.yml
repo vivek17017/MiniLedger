@@ -1,0 +1,17 @@
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: miniledger-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: miniledger
+      POSTGRES_PASSWORD: miniledger_dev
+      POSTGRES_DB: miniledger
+    ports:
+      - "5432:5432"
+    volumes:
+      - miniledger_data:/var/lib/postgresql/data
+
+volumes:
+  miniledger_data:
