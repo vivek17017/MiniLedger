@@ -115,8 +115,8 @@ All loan and summary endpoints require a valid `Authorization: Bearer <token>` h
 
 ## Demo
 
-Screen recording: [Add your Loom or Google Drive link here]
+Screen recording: 
 
 ## Repository
 
-GitHub: [Add your repository URL here]
+GitHub: https://github.com/vivek17017/MiniLedger
