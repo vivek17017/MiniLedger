@@ -437,6 +437,33 @@ app.get(
   }
 );
 
+// Public portfolio demo login. Uses a dedicated account, not an existing user's data.
+const DEMO_PHONE = "+10000000000";
+
+app.post("/api/auth/demo", async (_req: Request, res: Response) => {
+  try {
+    const user = await prisma.user.upsert({
+      where: { phone: DEMO_PHONE },
+      update: {},
+      create: { phone: DEMO_PHONE },
+    });
+
+    const token = jwt.sign(
+      { userId: user.id },
+      JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    return res.json({
+      token,
+      user: { id: user.id, phone: user.phone, isDemo: true },
+    });
+  } catch (error) {
+    console.error("Demo login failed:", error);
+    return res.status(500).json({ error: "Demo login failed" });
+  }
+});
+
 // Start server.
 const server = app.listen(PORT, () => {
   console.log(`MiniLedger API running on http://localhost:${PORT}`);
