@@ -91,6 +91,24 @@ const [uploadingReceiptId, setUploadingReceiptId] =
     }
   }
 
+  async function handleDemoLogin() {
+    setLoading(true);
+    try {
+      const result = await api<LoginResult>("/api/auth/demo", {
+        method: "POST",
+      });
+      setUser(result.user);
+      setToken(result.token);
+      setOtp("");
+      setOtpSent(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Please try again.";
+      Alert.alert("Demo login failed", message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function verifyOtp() {
     if (!/^\d{6}$/.test(otp)) {
       Alert.alert("Invalid OTP", "Enter the six-digit code.");
@@ -297,6 +315,13 @@ async function uploadReceipt(loan: Loan) {
               {loading ? "Please wait..." : otpSent ? "Verify OTP" : "Send OTP"}
             </Text>
           </Pressable>
+          <Pressable
+            style={styles.demoButton}
+            onPress={() => void handleDemoLogin()}
+            disabled={loading}
+          >
+            <Text style={styles.demoButtonText}>Try Demo</Text>
+          </Pressable>
           {loading && <ActivityIndicator />}
         </View>
       </SafeAreaView>
@@ -463,6 +488,19 @@ async function uploadReceipt(loan: Loan) {
 }
 
 const styles = StyleSheet.create({
+  demoButton: {
+    marginTop: 14,
+    paddingVertical: 15,
+    borderWidth: 1,
+    borderColor: "#356B57",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  demoButtonText: {
+    color: "#356B57",
+    fontWeight: "700",
+    fontSize: 16,
+  },
   container: { flex: 1, backgroundColor: "#F5F7FB" },
   content: { padding: 20, paddingBottom: 40 },
   login: { flex: 1, justifyContent: "center", padding: 24 },
